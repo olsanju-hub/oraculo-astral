@@ -62,7 +62,7 @@ function drawIndex(doc: jsPDF, indexPage: number, entries: IndexEntry[]) {
   drawCallout(
     doc,
     36,
-    'Este informe está pensado para leerse de forma progresiva: primero explica el vocabulario básico, después muestra los datos calculados y finalmente desarrolla la interpretación por grandes temas.',
+    'Lee este informe como un pequeño libro de autoconocimiento: primero encontrarás una orientación sencilla, después los datos de la carta y finalmente una lectura por grandes temas de vida.',
   )
   let y = 62
   entries.forEach((entry, index) => {
@@ -89,7 +89,7 @@ function drawTechnicalPages(doc: jsPDF, chart: NatalChart, logo: HTMLImageElemen
   drawCallout(
     doc,
     34,
-    'La rueda natal es una representación del cielo calculado para el lugar, fecha y hora de nacimiento. Los planetas indican funciones internas; las casas muestran áreas de vida; los aspectos son líneas de relación entre puntos.',
+    'La rueda natal resume el cielo del nacimiento. Los planetas señalan partes de la personalidad; las casas, escenarios de vida; las líneas interiores, vínculos entre esas partes.',
   )
   drawChartWheel(doc, chart, 105, 105, 48)
   doc.addImage(logo, 'PNG', 91, 78, 28, 28)
@@ -109,7 +109,7 @@ function drawTechnicalPages(doc: jsPDF, chart: NatalChart, logo: HTMLImageElemen
   y = drawCallout(
     doc,
     34,
-    'La tabla de posiciones resume dónde cae cada planeta o punto. “Casa” indica el área de experiencia donde esa energía se expresa con más claridad.',
+    'Esta tabla es la ficha de referencia. Indica en qué signo y casa se sitúa cada planeta o punto para que puedas volver a los datos mientras lees la interpretación.',
   )
   y = drawTable(
     doc,
@@ -123,7 +123,7 @@ function drawTechnicalPages(doc: jsPDF, chart: NatalChart, logo: HTMLImageElemen
   const aspectY = drawCallout(
     doc,
     34,
-    'Los aspectos describen relaciones entre puntos de la carta. El orbe indica cuánta distancia hay respecto al ángulo exacto: cuanto más pequeño, más preciso es el contacto.',
+    'Esta tabla reúne las conexiones principales entre planetas. El orbe mide la cercanía del contacto: cuanto más pequeño, más nítida suele sentirse esa relación.',
   )
   drawTable(
     doc,

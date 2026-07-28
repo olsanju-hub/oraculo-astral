@@ -70,18 +70,18 @@ function readingGuideSection(ctx: InterpretationContext): InterpretationSection 
   return {
     id: 'reading-guide',
     title: 'Cómo leer este informe',
-    summary: 'La carta natal es un mapa simbólico: muestra relaciones entre funciones internas, no etiquetas fijas sobre una persona.',
+    summary: 'La carta natal puede leerse como un mapa de tendencias: no etiqueta a una persona, sino que ayuda a reconocer climas internos y formas habituales de responder a la vida.',
     linkedAspects: strongestAspect ? [strongestAspect.id] : [],
     body: [
-      `Antes de entrar en la interpretación conviene aclarar el lenguaje. El Sol describe identidad y dirección vital; la Luna habla de seguridad emocional; el Ascendente es la forma espontánea de entrar en contacto con el mundo, como la puerta principal de una casa. El Medio Cielo señala la zona más visible de la carta: vocación, reputación y manera de ocupar un lugar público.`,
-      `Las Casas son doce áreas de experiencia. Por ejemplo, la Casa 4 se relaciona con raíces e intimidad, la Casa 7 con vínculos importantes y la Casa 10 con profesión o exposición pública. Cuando un planeta cae en una casa, esa función de la personalidad tiende a expresarse con fuerza en los temas de esa área.`,
-      `Los signos describen estilos. No son “tipos de persona”, sino maneras de actuar: Aries inicia, Tauro estabiliza, Géminis conecta ideas, Cáncer protege, Leo expresa, Virgo analiza, Libra vincula, Escorpio profundiza, Sagitario amplía, Capricornio estructura, Acuario toma distancia y Piscis imagina o empatiza.`,
-      `Los elementos resumen el temperamento general: Fuego impulsa, Tierra concreta, Aire piensa y comunica, Agua siente y vincula. Las modalidades describen el modo de movimiento: Cardinal inicia, Fijo sostiene y Mutable adapta. En esta carta domina ${ctx.primaryElement.toLowerCase()} con modalidad ${ctx.primaryModality.toLowerCase()}, por eso muchas interpretaciones se leerán a través de ${elementTone[ctx.primaryElement]} y de la tendencia a ${modalityTone[ctx.primaryModality]}.`,
-      `Un aspecto es una relación angular entre dos planetas o puntos. Dicho de forma sencilla: muestra cómo conversan dos partes de la carta. Un trígono suele facilitar cooperación; una cuadratura crea fricción que obliga a crecer; una oposición pide equilibrio entre dos polos; una conjunción mezcla dos energías; un sextil abre oportunidades si se usan conscientemente. Aspectos menores como quincuncio o semisextil son ajustes finos: no dominan toda la carta, pero pueden señalar incomodidades o aprendizajes de adaptación.`,
+      `Antes de entrar en la lectura conviene traducir el lenguaje astrológico a imágenes sencillas. El Sol es la lámpara central: habla de identidad, dirección vital y aquello que una persona necesita expresar para sentirse viva. La Luna es la habitación íntima: señala seguridad emocional, memoria afectiva y la manera de buscar refugio. El Ascendente es la puerta de entrada: el gesto espontáneo con el que alguien responde al mundo antes de pensarlo demasiado. El Medio Cielo es la ventana más visible: vocación, reputación y modo de ocupar un lugar público.`,
+      `Las Casas son escenarios de la vida. La Casa 4, por ejemplo, se parece al hogar interior; la Casa 7 habla del encuentro con otra persona; la Casa 10 mira hacia profesión y reconocimiento. Cuando un planeta cae en una casa, esa parte de la personalidad tiende a expresarse en ese escenario.`,
+      `Los signos no son moldes cerrados. Funcionan más bien como estilos de movimiento: Aries abre camino, Tauro estabiliza, Géminis conecta ideas, Cáncer protege, Leo expresa, Virgo ordena, Libra busca equilibrio, Escorpio profundiza, Sagitario amplía, Capricornio estructura, Acuario observa desde otra perspectiva y Piscis imagina o empatiza.`,
+      `Los elementos ayudan a reconocer el clima general. Fuego enciende, Tierra concreta, Aire relaciona ideas y Agua registra emociones. Las modalidades explican el ritmo: Cardinal inicia, Fijo sostiene y Mutable adapta. En esta carta domina ${ctx.primaryElement.toLowerCase()} con modalidad ${ctx.primaryModality.toLowerCase()}, por eso el informe vuelve varias veces a ${elementTone[ctx.primaryElement]} y a la tendencia a ${modalityTone[ctx.primaryModality]}.`,
+      `Los aspectos son conexiones entre planetas. Para entenderlos sin tecnicismos, imagina que cada planeta representa una voz interna: algunos vínculos hacen que dos voces se entiendan con facilidad, otros obligan a negociar, y otros mezclan energías que cuesta separar. Los nombres técnicos —trígono, cuadratura, oposición, conjunción, sextil o quincuncio— aparecen cuando sirven para ubicar el dato, pero la interpretación se centrará en lo que esa relación puede significar en la experiencia cotidiana.`,
       `El Nodo Norte no es un planeta físico: es un punto matemático asociado con dirección de crecimiento. El Nodo Sur marca una zona conocida o automática. Quirón, cuando aparece calculado con fiabilidad, se lee como una sensibilidad que puede volverse sabiduría práctica. Lilith o Luna Negra es otro punto matemático asociado con instinto, autonomía y partes menos domesticadas de la personalidad. Estos puntos se interpretan con cautela y siempre dentro del conjunto de la carta.`,
       strongestAspect
-        ? `En esta lectura se presta atención especial a ${aspectPhrase(ctx, strongestAspect)} porque los aspectos con orbe pequeño suelen sentirse con más nitidez. El orbe es la distancia respecto al aspecto exacto: cuanto menor es, más cerrado está el contacto.`
-        : `Cuando no hay un aspecto claramente dominante, la lectura se apoya más en la repetición de patrones: elementos, casas activadas, modalidad dominante y vínculos entre planetas personales.`,
+        ? `Hay un vínculo especialmente preciso entre ${contactPair(ctx, strongestAspect)}. En la tabla técnica se verá su nombre y su orbe; en la lectura importa sobre todo que ese contacto tiende a sentirse con nitidez y colorea varias decisiones personales.`
+        : `Cuando no hay un vínculo único que domine claramente, la lectura se apoya en patrones repetidos: elementos, casas activadas, modalidad dominante y relaciones entre planetas personales.`,
     ],
   }
 }
@@ -124,10 +124,10 @@ function buildOverview(ctx: InterpretationContext) {
   const angularPhrase =
     angular.length > 0
       ? ` Además, ${list(angular.map((position) => position.label))} en casas angulares hace que parte de esa dinámica sea visible y difícil de dejar en segundo plano.`
-      : ' La carta no concentra todos sus planetas personales en los ángulos, de modo que varias motivaciones operan con más elaboración interna que exhibición inmediata.'
+      : ' La carta no concentra todos sus planetas personales en los ángulos, de modo que varias motivaciones necesitan madurar por dentro antes de mostrarse con claridad.'
 
-  return `Esta lectura integra la carta como sistema simbólico, no como una suma de piezas aisladas. El eje inicial combina Sol en ${sun.sign} en Casa ${sun.house}, Luna en ${moon.sign} en Casa ${moon.house} y Ascendente en ${asc.sign}; sobre ese eje pesan la dominante ${ctx.primaryElement.toLowerCase()} y la modalidad ${ctx.primaryModality.toLowerCase()}, que inclinan la personalidad hacia ${elementTone[ctx.primaryElement]} y hacia ${modalityTone[ctx.primaryModality]}. ${
-    mainAspect ? `El aspecto más cerrado, ${aspectPhrase(ctx, mainAspect)}, actúa como una nota de fondo que colorea varias áreas de la lectura.` : ''
+  return `Esta lectura no avanza como una lista de rasgos, sino como una conversación entre varias capas de la carta. El eje inicial combina Sol en ${sun.sign} en Casa ${sun.house}, Luna en ${moon.sign} en Casa ${moon.house} y Ascendente en ${asc.sign}; sobre ese eje pesan la dominante ${ctx.primaryElement.toLowerCase()} y la modalidad ${ctx.primaryModality.toLowerCase()}, que inclinan la personalidad hacia ${elementTone[ctx.primaryElement]} y hacia ${modalityTone[ctx.primaryModality]}. ${
+    mainAspect ? `También destaca una relación muy precisa entre ${contactPair(ctx, mainAspect)}, que funciona como una nota de fondo en distintas áreas de la lectura.` : ''
   }${angularPhrase} La astrología se presenta aquí como lenguaje de autoconocimiento, no como diagnóstico ni predicción cerrada.`
 }
 
@@ -141,7 +141,7 @@ function identitySection(ctx: InterpretationContext): InterpretationSection {
   const innerOuter =
     sun.sign === asc.sign
       ? `Como Sol y Ascendente comparten ${sun.sign}, la imagen que ${ctx.chart.input.name} proyecta tiende a coincidir con lo que intenta afirmar por dentro; hay menos distancia entre primera impresión y voluntad central.`
-      : `Hay una diferencia útil entre el Sol en ${sun.sign} y el Ascendente en ${asc.sign}: por fuera aparece una respuesta ${signTone[asc.sign]}, mientras que el centro personal busca expresarse de manera ${signTone[sun.sign]}. Esa distancia puede ser riqueza si se usa conscientemente, y fricción si se convierte en personaje automático.`
+      : `Hay una diferencia útil entre el Sol en ${sun.sign} y el Ascendente en ${asc.sign}: por fuera aparece una respuesta ${signTone[asc.sign]}, mientras que el centro personal busca expresarse de manera ${signTone[sun.sign]}. Esa distancia puede convertirse en riqueza si permite moverse entre registros; se vuelve pesada cuando la persona siente que debe sostener una imagen que no coincide con su centro.`
 
   return {
     id: 'identity',
@@ -153,7 +153,7 @@ function identitySection(ctx: InterpretationContext): InterpretationSection {
       `${innerOuter} El Sol cae en Casa ${sun.house}, área asociada con ${topic(sun)}, así que la pregunta “quién soy” se activa especialmente cuando aparecen asuntos de ${topic(sun)}.`,
       solarPressure,
       ascAspects.length > 0
-        ? `El Ascendente no funciona como simple máscara: ${describeAspectSet(ctx, ascAspects, 'la manera de iniciar experiencias recibe interferencias claras de otros puntos de la carta').toLowerCase()}`
+        ? `El Ascendente no funciona como simple máscara. La manera de iniciar experiencias queda teñida por otros puntos de la carta: ${describeAspectSet(ctx, ascAspects, 'al comenzar algo nuevo aparecen matices que conviene reconocer').toLowerCase()}`
         : `El Ascendente en ${asc.sign} ofrece una puerta de entrada relativamente limpia: la persona puede iniciar situaciones desde esa cualidad ${signTone[asc.sign]} sin que los aspectos principales distorsionen demasiado la primera respuesta.`,
     ],
   }
@@ -167,15 +167,15 @@ function emotionalSection(ctx: InterpretationContext): InterpretationSection {
   const elementContrast = ctx.primaryElement === 'Agua' ? 'la sensibilidad está reforzada por la dominante elemental' : `la dominante ${ctx.primaryElement.toLowerCase()} puede hacer que lo emocional busque expresarse a través de ${elementTone[ctx.primaryElement]}`
 
   const paragraphs = [
-    `La Luna en ${moon.sign} en Casa ${moon.house} coloca la seguridad emocional en temas de ${topic(moon)}. No describe solo “cómo siente”, sino dónde necesita reconocer pertenencia, descanso y respuesta íntima. En esta carta, ${elementContrast}, de modo que la emoción no siempre se muestra con la misma textura con la que nace.`,
-    describeAspectSet(ctx, moonAspects, 'el mundo emocional recibe mucha información de otras funciones psíquicas'),
+    `La Luna en ${moon.sign} en Casa ${moon.house} lleva la búsqueda de seguridad hacia temas de ${topic(moon)}. Aquí no basta con preguntar “cómo siente” la persona; también importa dónde necesita pertenencia, descanso y respuesta íntima. En esta carta, ${elementContrast}, de modo que la emoción no siempre se muestra con la misma textura con la que nace.`,
+    describeAspectSet(ctx, moonAspects, 'el mundo emocional no vive aislado'),
   ]
 
   if (saturnMoon) {
-    paragraphs.push(`${aspectPhrase(ctx, saturnMoon)} sugiere que la vulnerabilidad puede pasar por filtros de autocontrol, responsabilidad o reserva. La madurez emocional aquí no consiste en endurecerse, sino en distinguir cuidado real de exigencia interiorizada.`)
+    paragraphs.push(`La relación entre ${contactPair(ctx, saturnMoon)} puede hacer que la vulnerabilidad pase por filtros de autocontrol, responsabilidad o reserva. La madurez emocional aquí no consiste en endurecerse, sino en distinguir cuidado real de exigencia interiorizada.`)
   }
   if (neptuneMoon) {
-    paragraphs.push(`${aspectPhrase(ctx, neptuneMoon)} añade permeabilidad: el clima de otras personas puede entrar con facilidad. Esto puede dar imaginación y compasión, pero también exige límites claros para no convertir cada emoción ajena en una obligación propia.`)
+    paragraphs.push(`La relación entre ${contactPair(ctx, neptuneMoon)} añade permeabilidad: el clima de otras personas puede entrar con facilidad. Esto puede dar imaginación y compasión, pero también exige límites claros para no convertir cada emoción ajena en una obligación propia.`)
   }
 
   return {
@@ -207,9 +207,9 @@ function mindSection(ctx: InterpretationContext): InterpretationSection {
           : `Como el Aire no domina la carta, el pensamiento puede estar más ligado a experiencia, emoción o necesidad práctica que a abstracción pura.`
       }`,
       moonMercury
-        ? `${aspectPhrase(ctx, moonMercury)} une memoria emocional y lenguaje. Esto puede hacer que la palabra salga cargada de vivencia: la persona no solo comunica datos, comunica atmósferas, recuerdos o necesidades no siempre dichas de frente.`
+        ? `La Luna y Mercurio están conectados de forma significativa. Esto puede hacer que la palabra salga cargada de vivencia: la persona no solo comunica datos, comunica atmósferas, recuerdos o necesidades no siempre dichas de frente.`
         : `Al no haber un aspecto mayor cerrado entre Luna y Mercurio, sentir y explicar pueden funcionar en tiempos distintos. A veces primero aparece la reacción interna y más tarde llega la frase precisa.`,
-      describeAspectSet(ctx, mercuryAspects, 'la mente se define por sus conexiones: no es una pieza neutral del mapa, sino un puente entre varias demandas internas'),
+      describeAspectSet(ctx, mercuryAspects, 'la mente actúa como puente entre varias demandas internas'),
     ],
   }
 }
@@ -231,13 +231,13 @@ function relationshipSection(ctx: InterpretationContext): InterpretationSection 
     body: [
       `Venus en ${venus.sign} en Casa ${venus.house} busca valor y vínculo a través de ${topic(venus)}, mientras Marte en ${mars.sign} en Casa ${mars.house} actúa desde una energía ${signTone[mars.sign]}. El Descendente en ${descendant.sign} señala que las relaciones importantes suelen traer cualidades ${signTone[descendant.sign]} que obligan a negociar con el propio modo de aparecer ante el mundo.`,
       venusMars
-        ? `${aspectPhrase(ctx, venusMars)} hace que deseo y afecto no caminen separados. Según el tono del aspecto, puede haber magnetismo, tensión creativa o necesidad de aprender a pedir lo que se desea sin desordenar lo que se valora.`
+        ? `Venus y Marte aparecen ligados, de modo que deseo y afecto no caminan por carriles completamente separados. Puede haber magnetismo, tensión creativa o necesidad de aprender a pedir lo que se desea sin desordenar lo que se valora.`
         : `Venus y Marte no aparecen unidos por un aspecto mayor cerrado; por eso el lenguaje afectivo y el impulso pueden expresarse por canales distintos. La carta gana matiz cuando la persona no exige que atracción, ternura y compromiso tengan siempre el mismo ritmo.`,
       `La Luna en ${moon.sign} añade la necesidad emocional de fondo: aunque Venus describa preferencias vinculares, la relación solo se vuelve habitable si también respeta esa seguridad lunar ligada a ${topic(moon)}.`,
       [...venusAspects, ...marsAspects].length > 0
-        ? `Los aspectos afectivos principales modifican el retrato: ${describeAspectSet(ctx, [...venusAspects, ...marsAspects].slice(0, 4), 'la manera de vincularse no se explica por un solo signo').toLowerCase()}`
+        ? `Los vínculos afectivos no se explican por un solo signo. ${describeAspectSet(ctx, [...venusAspects, ...marsAspects].slice(0, 4), 'en la forma de amar aparecen varias voces a la vez')}`
         : `Al no concentrarse aspectos mayores sobre Venus o Marte, los vínculos pueden depender más de decisiones conscientes y contexto que de una tensión natal claramente dominante.`,
-      `Una compatibilidad real requeriría comparar dos cartas completas. Esta lectura solo describe el patrón relacional propio; no concluye que alguien sea compatible o incompatible por signo solar, elemento o una posición aislada.`,
+      `Una compatibilidad real requeriría comparar dos cartas completas. Esta lectura se limita al patrón relacional propio: no decide si alguien será compatible o incompatible por signo solar, elemento o una posición aislada.`,
     ],
   }
 }
@@ -263,11 +263,11 @@ function actionSection(ctx: InterpretationContext): InterpretationSection {
           : `La distribución elemental sostiene una acción teñida por ${elementTone[ctx.primaryElement]}, así que el impulso no actúa solo por velocidad, sino por la lógica dominante del mapa.`
       }`,
       sunMars
-        ? `${aspectPhrase(ctx, sunMars)} conecta voluntad e iniciativa; la persona suele notar rápido cuándo algo toca su identidad, porque el cuerpo y el deseo responden antes de que todo esté explicado.`
+        ? `La voluntad y la iniciativa están estrechamente relacionadas; la persona suele notar rápido cuándo algo toca su identidad, porque el cuerpo y el deseo responden antes de que todo esté explicado.`
         : `El Sol en ${sun.sign} y Marte en ${mars.sign} no dependen de un aspecto mayor exacto para funcionar; esto permite separar identidad y reacción, aunque también exige decidir cuándo actuar y cuándo simplemente observar.`,
       marsSaturn && saturn
-        ? `${aspectPhrase(ctx, marsSaturn)} introduce una pedagogía del ritmo: Saturno en ${saturn.sign} no apaga a Marte, pero le exige método, paciencia y consecuencias. La frustración puede transformarse en oficio si la persona acepta entrenar su fuerza en vez de medirla solo por intensidad inmediata.`
-        : describeAspectSet(ctx, marsAspects, 'la acción recibe señales de otros puntos de la carta'),
+        ? `Marte y Saturno plantean una pedagogía del ritmo: Saturno en ${saturn.sign} no apaga a Marte, pero le exige método, paciencia y consecuencias. La frustración puede transformarse en oficio si la persona acepta entrenar su fuerza en vez de medirla solo por intensidad inmediata.`
+        : describeAspectSet(ctx, marsAspects, 'la acción recibe señales de otras partes de la carta'),
     ],
   }
 }
@@ -286,10 +286,10 @@ function vocationSection(ctx: InterpretationContext): InterpretationSection {
     linkedBodies: ['midheaven', 'sun', 'saturn', 'jupiter'],
     linkedAspects: mcAspects.map((aspect) => aspect.id),
     body: [
-      `El Medio Cielo en ${mc.sign} orienta la proyección pública hacia una expresión ${signTone[mc.sign]}. No habla solo de empleo: describe el tipo de huella que la persona intenta dejar cuando asume responsabilidad visible.`,
+      `El Medio Cielo en ${mc.sign} orienta la proyección pública hacia una expresión ${signTone[mc.sign]}. No se limita al empleo: habla del tipo de huella que la persona intenta dejar cuando asume responsabilidad visible.`,
       `El Sol en ${sun.sign} en Casa ${sun.house} indica que la vocación gana autenticidad cuando no se separa de los temas de ${topic(sun)}. La carrera no se lee aquí como una fachada pública, sino como una prolongación posible del centro vital.`,
       tenthBodies.length > 0
-        ? `La Casa 10 recibe a ${list(tenthBodies.map((position) => `${position.label} en ${position.sign}`))}; por eso la vocación no es un tema periférico. Es un escenario donde varias funciones internas buscan reconocimiento, estructura o dirección.`
+        ? `La Casa 10 recibe a ${list(tenthBodies.map((position) => `${position.label} en ${position.sign}`))}; por eso la vocación no es un tema periférico. Es un escenario donde varias partes importantes de la personalidad buscan reconocimiento, estructura o dirección.`
         : `La Casa 10 no concentra planetas principales, de modo que la profesión puede construirse más desde el regente simbólico del Medio Cielo, los aspectos y las decisiones de trayectoria que desde una presión planetaria directa en esa casa.`,
       saturn
         ? `Saturno en ${saturn.sign} en Casa ${saturn.house} muestra dónde la carta pide competencia real antes de exponerse demasiado. Si se integra bien, la ambición deja de ser prisa y se convierte en arquitectura.`
@@ -297,7 +297,7 @@ function vocationSection(ctx: InterpretationContext): InterpretationSection {
       jupiter
         ? `Júpiter en ${jupiter.sign} en Casa ${jupiter.house} indica dónde la confianza crece cuando hay amplitud y sentido. Sus temas de ${topic(jupiter)} pueden funcionar como puerta de oportunidad, especialmente si no se confunden expansión con exceso.`
         : `La expansión profesional se lee aquí desde el conjunto de la carta, sin una posición jupiteriana destacada en los datos disponibles.`,
-      describeAspectSet(ctx, mcAspects, 'el camino profesional está condicionado por vínculos directos con otros puntos del mapa'),
+      describeAspectSet(ctx, mcAspects, 'el camino profesional no se construye en una sola dirección'),
     ],
   }
 }
@@ -309,14 +309,14 @@ function talentsSection(ctx: InterpretationContext): InterpretationSection {
   return {
     id: 'talents',
     title: 'Talentos naturales',
-    summary: `Los recursos más fluidos aparecen donde se repiten elemento dominante, casas angulares y aspectos armónicos.`,
+    summary: `Los recursos más fluidos aparecen donde se repiten elemento dominante, casas visibles y relaciones planetarias favorables.`,
     linkedBodies: uniqueBodies(harmonic),
     linkedAspects: harmonic.map((aspect) => aspect.id),
     body: [
       `La dominante ${element.toLowerCase()} da un talento de base para moverse desde ${elementTone[element]}. No es una garantía automática de éxito, pero sí un idioma que la carta habla con más facilidad que otros.`,
       harmonic.length > 0
-        ? `Los aspectos armónicos más útiles son ${list(harmonic.map((aspect) => aspectPhrase(ctx, aspect)))}. Estos contactos muestran zonas donde distintas funciones internas cooperan sin exigir tanta negociación previa.`
-        : `No destacan muchos aspectos armónicos cerrados; esto no reduce el potencial, pero sugiere que los talentos se desarrollan más por integración consciente que por facilidad inmediata.`,
+        ? `Los apoyos más naturales aparecen alrededor de ${list(harmonic.map((aspect) => contactPair(ctx, aspect)))}. Ahí varias partes de la carta parecen reconocerse con menos esfuerzo, como si compartieran un idioma de base.`
+        : `No aparecen muchos apoyos fáciles y muy cerrados; esto no reduce el potencial, pero sugiere que los talentos se desarrollan más por integración consciente que por facilidad inmediata.`,
       angular.length > 0
         ? `${list(angular.map((position) => position.label))} en casas angulares convierte parte del talento en presencia: otras personas pueden percibir esas cualidades incluso antes de que la persona las explique.`
         : `Al haber menos planetas personales en ángulos, varios dones pueden sentirse privados al principio y volverse visibles cuando existe contexto, confianza o oficio.`,
@@ -336,13 +336,13 @@ function challengesSection(ctx: InterpretationContext): InterpretationSection {
     linkedAspects: [...tense, ...saturnAspects, ...plutoAspects].map((aspect) => aspect.id),
     body: [
       tense.length > 0
-        ? `Las tensiones más insistentes son ${list(tense.map((aspect) => aspectPhrase(ctx, aspect)))}. Al repetirse, no conviene leerlas como “problemas”, sino como fricciones estructurales entre necesidades legítimas que no siempre quieren lo mismo al mismo tiempo.`
+        ? `Las tensiones más insistentes se concentran alrededor de ${list(tense.map((aspect) => contactPair(ctx, aspect)))}. No conviene leerlas como “problemas”, sino como necesidades legítimas que no siempre quieren lo mismo al mismo tiempo.`
         : `La carta no muestra una gran acumulación de aspectos tensos principales; los retos pueden aparecer más por distribución elemental, casas activadas o decisiones vitales que por choques planetarios muy cerrados.`,
       saturnAspects.length > 0
-        ? `Saturno interviene en ${list(saturnAspects.map((aspect) => aspectPhrase(ctx, aspect)))}. Eso suele volver más seria la función tocada: pide realidad, límites y práctica sostenida, incluso cuando otra parte de la carta preferiría resolverlo con rapidez.`
-        : `Saturno no domina por aspectos cerrados en esta selección, por lo que la sensación de deber puede ser más situacional que nuclear.`,
+        ? `Saturno interviene cerca de ${list(saturnAspects.map((aspect) => contactPair(ctx, aspect)))}. Eso suele volver más seria la zona tocada: pide realidad, límites y práctica sostenida, incluso cuando otra parte de la carta preferiría resolverlo con rapidez.`
+        : `Saturno no domina por contactos cerrados, por lo que la sensación de deber puede ser más situacional que nuclear.`,
       plutoAspects.length > 0
-        ? `Plutón añade intensidad en ${list(plutoAspects.map((aspect) => aspectPhrase(ctx, aspect)))}. Allí la carta no se conforma con arreglos superficiales; pide revisar control, apego, miedo a perder poder o necesidad de transformación real.`
+        ? `Plutón añade intensidad alrededor de ${list(plutoAspects.map((aspect) => contactPair(ctx, aspect)))}. Allí la carta no se conforma con arreglos superficiales; pide revisar control, apego, miedo a perder poder o necesidad de transformación real.`
         : `Plutón no aparece como gran modificador de los planetas personales principales, de modo que los procesos de transformación pueden activarse más por tránsitos y experiencias que por una presión natal constante.`,
     ],
   }
@@ -364,14 +364,14 @@ function contradictionsSection(ctx: InterpretationContext): InterpretationSectio
     linkedAspects: [sunMoon, venusSaturn, uranusPersonal].filter(isAspect).map((aspect) => aspect.id),
     body: [
       sunMoon
-        ? `${aspectPhrase(ctx, sunMoon)} describe la conversación central entre voluntad y necesidad emocional. Cuando el aspecto es fluido, ambas partes pueden cooperar; cuando es tenso, la persona puede oscilar entre ser fiel a lo que quiere y proteger lo que necesita.`
+        ? `La relación entre Sol y Luna describe una conversación central entre voluntad y necesidad emocional. Cuando ambas partes se escuchan, la persona gana coherencia; cuando una tapa a la otra, puede oscilar entre ser fiel a lo que quiere y proteger lo que necesita.`
         : `Sol en ${sun.sign} y Luna en ${moon.sign} no están unidos por un aspecto mayor cerrado; eso permite que identidad y emoción se alternen sin estar siempre en conflicto directo, aunque sus signos y casas sigan marcando necesidades diferentes.`,
       `Venus en ${venus.sign} busca vínculo desde una lógica ${signTone[venus.sign]}, mientras Marte en ${mars.sign} persigue deseo y afirmación desde una lógica ${signTone[mars.sign]}. Si ambas energías no se escuchan, una parte puede querer paz afectiva mientras otra exige movimiento, conquista o defensa.`,
       venusSaturn
-        ? `${aspectPhrase(ctx, venusSaturn)} puede introducir cautela en el amor o exigencia al valorar. Bien trabajado, da lealtad y criterio; sin conciencia, puede convertir el afecto en examen permanente.`
+        ? `El vínculo entre Venus y Saturno puede introducir cautela en el amor o exigencia al valorar. Bien trabajado, da lealtad y criterio; sin conciencia, puede convertir el afecto en examen permanente.`
         : `Al no destacar un contacto Venus-Saturno cerrado, las contradicciones afectivas no parecen venir principalmente de miedo al compromiso o exceso de exigencia, sino de la relación entre deseo, necesidad emocional y estilo vincular.`,
       uranusPersonal
-        ? `${aspectPhrase(ctx, uranusPersonal)} introduce una necesidad de libertad que no se negocia bien bajo presión. Esta carta necesita espacio para respirar; de lo contrario, puede romper de golpe lo que no pudo reformar gradualmente.`
+        ? `La presencia de Urano tocando una zona personal introduce una necesidad de libertad que no se negocia bien bajo presión. Esta carta necesita espacio para respirar; de lo contrario, puede romper de golpe lo que no pudo reformar gradualmente.`
         : `Urano no aparece como el principal detonador de contradicción personal, así que la independencia puede expresarse de forma más conceptual o contextual que como ruptura constante.`,
     ],
   }
@@ -393,11 +393,11 @@ function growthSection(ctx: InterpretationContext): InterpretationSection {
         ? `El eje nodal va de ${south.sign} en Casa ${south.house} hacia ${north.sign} en Casa ${north.house}. La zona conocida está asociada con ${topic(south)}; el crecimiento, en cambio, pide ensayar una cualidad ${signTone[north.sign]} en asuntos de ${topic(north)}.`
         : `Sin eje nodal completo disponible, el desarrollo se entiende mejor a partir de los aspectos tensos y de la distribución elemental de la carta.`,
       nodeAspects.length > 0
-        ? `Los aspectos al Nodo Norte (${list(nodeAspects.map((aspect) => aspectPhrase(ctx, aspect)))}) muestran que el crecimiento no ocurre en abstracto: involucra funciones concretas de la personalidad que empujan, resisten o abren puertas.`
-        : `El Nodo Norte no recibe aspectos mayores cerrados en esta selección, por lo que su dirección puede sentirse menos urgente al principio y más clara cuando la vida active sus casas y signos por experiencia.`,
+        ? `El camino de crecimiento se enlaza con ${list(nodeAspects.map((aspect) => contactPair(ctx, aspect)))}. Esto sugiere que la evolución no ocurre en abstracto: pasa por decisiones, vínculos y rasgos concretos de la personalidad.`
+        : `El Nodo Norte no aparece muy presionado por otros puntos principales, por lo que su dirección puede sentirse menos urgente al principio y más clara cuando la vida active sus casas y signos por experiencia.`,
       chiron
         ? `Quirón en ${chiron.sign} en Casa ${chiron.house} señala una sensibilidad alrededor de ${topic(chiron)}. No debe leerse como herida fija, sino como una zona donde la persona aprende a acompañarse con más precisión porque conoce bien esa fragilidad.`
-        : `Quirón no se incluye si el motor no lo calcula de forma fiable; por eso esta lectura no inventa un punto adicional solo para adornar el informe.`,
+        : `Quirón no aparece en esta lectura; por eso el desarrollo personal se entiende aquí desde el eje nodal, los vínculos entre planetas y la distribución general de la carta.`,
     ],
   }
 }
@@ -416,7 +416,7 @@ function synthesisSection(ctx: InterpretationContext): InterpretationSection {
     body: [
       `La impresión de conjunto no es la de una lista de rasgos, sino la de un sistema que intenta coordinar identidad ${signTone[sun.sign]}, sensibilidad ${signTone[moon.sign]} y una vocación pública ${signTone[mc.sign]}. La dominante ${ctx.primaryElement.toLowerCase()} da el material principal con el que la persona responde a la vida; la modalidad ${ctx.primaryModality.toLowerCase()} describe cómo intenta organizar ese material.`,
       strongestAspect
-        ? `El aspecto más exacto, ${aspectPhrase(ctx, strongestAspect)}, merece atención especial porque los aspectos cerrados suelen sentirse antes que las descripciones generales. No anula el resto de la carta, pero funciona como una bisagra: muchas decisiones personales pasan por aprender a usar esa tensión o facilidad con madurez.`
+        ? `El vínculo más preciso, entre ${contactPair(ctx, strongestAspect)}, merece atención especial porque suele sentirse antes que las descripciones generales. No anula el resto de la carta, pero funciona como una bisagra: muchas decisiones personales pasan por aprender a usar esa mezcla con madurez.`
         : `Al no destacar un aspecto único muy dominante, la integración depende más de leer patrones repetidos entre casas, elementos y planetas personales que de resolver una sola tensión central.`,
       `El potencial de esta carta aparece cuando ${ctx.chart.input.name} no intenta vivir una parte del mapa contra otra. La identidad necesita escuchar a la Luna, la acción necesita respetar los límites del conjunto, y la vocación gana fuerza cuando no se separa de la vida emocional. Ese trabajo de integración es precisamente lo que convierte una carta natal en una herramienta viva de autoconocimiento.`,
     ],
@@ -439,22 +439,16 @@ function describeAspectSet(ctx: InterpretationContext, aspects: Aspect[], fallba
   const tense = aspects.filter((aspect) => aspect.tone === 'tense')
   const neutral = aspects.filter((aspect) => aspect.tone === 'neutral')
   const clauses = []
-  if (harmonic.length) clauses.push(`encuentra cooperación en ${list(harmonic.map((aspect) => aspectPhrase(ctx, aspect)))}`)
-  if (tense.length) clauses.push(`se ve exigida por ${list(tense.map((aspect) => aspectPhrase(ctx, aspect)))}`)
-  if (neutral.length) clauses.push(`se matiza mediante ${list(neutral.map((aspect) => aspectPhrase(ctx, aspect)))}`)
+  if (harmonic.length) clauses.push(`hay apoyos naturales alrededor de ${list(harmonic.map((aspect) => contactPair(ctx, aspect)))}`)
+  if (tense.length) clauses.push(`hay zonas que piden más negociación cerca de ${list(tense.map((aspect) => contactPair(ctx, aspect)))}`)
+  if (neutral.length) clauses.push(`aparecen ajustes sutiles en torno a ${list(neutral.map((aspect) => contactPair(ctx, aspect)))}`)
   return `${capitalize(fallback)}: ${clauses.join('; ')}.`
 }
 
-function aspectPhrase(ctx: InterpretationContext, aspect: Aspect) {
+function contactPair(ctx: InterpretationContext, aspect: Aspect) {
   const from = must(ctx, aspect.from)
   const to = must(ctx, aspect.to)
-  const tone =
-    aspect.tone === 'harmonic'
-      ? 'facilita el diálogo entre'
-      : aspect.tone === 'tense'
-        ? 'crea fricción entre'
-        : 'pone en contacto'
-  return `${aspect.label.toLowerCase()} ${tone} ${from.label} en ${from.sign} y ${to.label} en ${to.sign} (orbe ${aspect.orb.toFixed(2)}°)`
+  return `${from.label} en ${from.sign} y ${to.label} en ${to.sign}`
 }
 
 function touches(aspect: Aspect, bodies: CelestialBodyId[]) {

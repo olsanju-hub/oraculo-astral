@@ -32,6 +32,7 @@ function App() {
   const [selectedLocation, setSelectedLocation] = useState<GeoResult | null>(null)
   const [chart, setChart] = useState<NatalChart | null>(null)
   const [progressIndex, setProgressIndex] = useState(0)
+  const [isExporting, setIsExporting] = useState(false)
   const prefersReducedMotion = useReducedMotion()
 
   const interpretation = useMemo(() => (chart ? buildInterpretation(chart) : null), [chart])
@@ -73,6 +74,17 @@ function App() {
     setChart(natalChart)
     await tick(6)
     setStep('results')
+  }
+
+  async function handlePdfExport() {
+    if (!chart || !interpretation) return
+    setIsExporting(true)
+    try {
+      const { exportNatalPdf } = await import('./core/pdf/pdfExport')
+      await exportNatalPdf(chart, interpretation)
+    } finally {
+      setIsExporting(false)
+    }
   }
 
   return (
@@ -169,7 +181,13 @@ function App() {
           <div className="section-heading">
             <MapPin size={18} />
             <h2>Lectura integrada</h2>
-            <button className="ghost-button icon-button" type="button" aria-label="Exportar PDF">
+            <button
+              className="ghost-button icon-button"
+              type="button"
+              aria-label="Exportar PDF"
+              disabled={isExporting}
+              onClick={handlePdfExport}
+            >
               <Download size={18} />
             </button>
           </div>

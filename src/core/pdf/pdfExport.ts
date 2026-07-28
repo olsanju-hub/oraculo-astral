@@ -14,6 +14,13 @@ interface IndexEntry {
   kind: 'front' | 'chapter'
 }
 
+interface TableOptions {
+  widths?: number[]
+  fontSize?: number
+  headerTitle?: string
+  nowrapColumns?: number[]
+}
+
 export async function exportNatalPdf(chart: NatalChart, interpretation: InterpretationReport) {
   const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' })
   const logo = await loadImage(`${import.meta.env.BASE_URL}brand/carta-astral.png`)
@@ -116,6 +123,7 @@ function drawTechnicalPages(doc: jsPDF, chart: NatalChart, logo: HTMLImageElemen
     y,
     ['Punto', 'Posición', 'Casa'],
     chart.positions.map((position) => [position.label, position.formatted, position.house ? `Casa ${position.house}` : '']),
+    { widths: [44, 88, 42], headerTitle: 'Tabla de posiciones', nowrapColumns: [0, 2] },
   )
   doc.addPage()
   indexEntries.push({ title: 'Aspectos principales', page: doc.getNumberOfPages(), kind: 'front' })
@@ -134,6 +142,7 @@ function drawTechnicalPages(doc: jsPDF, chart: NatalChart, logo: HTMLImageElemen
       `${labelFor(chart, aspect.from)} - ${labelFor(chart, aspect.to)}`,
       `${aspect.orb.toFixed(2)}°`,
     ]),
+    { widths: [40, 104, 30], fontSize: 8.3, headerTitle: 'Aspectos principales', nowrapColumns: [0, 2] },
   )
 }
 
@@ -143,24 +152,19 @@ function drawInterpretation(doc: jsPDF, interpretation: InterpretationReport, lo
   drawHeader(doc, interpretation.title)
   let y = 36
   y = drawParagraph(doc, interpretation.overview, y, true)
-  interpretation.sections.forEach((section) => {
-    const estimatedBlock = estimateTextHeight(doc, section.summary, 10, page.width - page.margin * 2) + 18
-    if (y + estimatedBlock > 244) {
+  interpretation.sections.forEach((section, index) => {
+    const estimatedBlock = estimateTextHeight(doc, section.summary, 10, page.width - page.margin * 2 - 12) + 24
+    if (y > 222 || y + estimatedBlock > page.bottom) {
       doc.addPage()
       drawHeader(doc, interpretation.title)
       y = 36
     }
     indexEntries.push({ title: section.title, page: doc.getNumberOfPages(), kind: 'chapter' })
-    doc.setFont('helvetica', 'bold')
-    doc.setFontSize(14)
-    doc.setTextColor(23, 32, 51)
-    doc.text(section.title, page.margin, y)
-    y += 8
-    y = drawParagraph(doc, section.summary, y, true)
+    y = drawChapterTitle(doc, y, index + 1, section.title, section.summary)
     section.body.forEach((paragraph) => {
       y = drawParagraph(doc, paragraph, y)
     })
-    y += 6
+    y += 4
   })
   doc.addImage(logo, 'PNG', 170, 254, 18, 18)
 }
@@ -214,29 +218,42 @@ function drawKeyValue(doc: jsPDF, y: number, key: string, value: string) {
   return y + Math.max(8, lines.length * 5)
 }
 
-function drawTable(doc: jsPDF, y: number, headers: string[], rows: string[][]) {
-  const colWidths = getColumnWidths(headers.length)
-  doc.setFontSize(9)
+function drawTable(doc: jsPDF, y: number, headers: string[], rows: string[][], options: TableOptions = {}) {
+  const colWidths = options.widths ?? getColumnWidths(headers.length)
+  const fontSize = options.fontSize ?? 9
+  const nowrapColumns = new Set(options.nowrapColumns ?? [])
+  const drawTableHeader = () => {
+    doc.setFontSize(fontSize)
+    doc.setFont('helvetica', 'bold')
+    doc.setTextColor(23, 32, 51)
+    let x = page.margin
+    headers.forEach((header, index) => {
+      doc.text(header, x, y, { maxWidth: colWidths[index] - 4 })
+      x += colWidths[index]
+    })
+    y += 5
+    doc.setDrawColor(226, 232, 240)
+    doc.line(page.margin, y, page.width - page.margin, y)
+    y += 5
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(fontSize)
+  }
+
+  doc.setFontSize(fontSize)
   doc.setFont('helvetica', 'bold')
-  let x = page.margin
-  headers.forEach((header, index) => {
-    doc.text(header, x, y, { maxWidth: colWidths[index] - 4 })
-    x += colWidths[index]
-  })
-  y += 5
-  doc.setDrawColor(226, 232, 240)
-  doc.line(page.margin, y, page.width - page.margin, y)
-  y += 5
+  drawTableHeader()
   doc.setFont('helvetica', 'normal')
   rows.forEach((row) => {
-    const wrapped = row.map((cell, index) => doc.splitTextToSize(String(cell), colWidths[index] - 4))
-    const rowHeight = Math.max(7, ...wrapped.map((cell) => cell.length * 4.2 + 2))
+    const wrapped = row.map((cell, index) => {
+      const value = String(cell)
+      return nowrapColumns.has(index) ? [fitSingleLine(doc, value, colWidths[index] - 4, fontSize)] : doc.splitTextToSize(value, colWidths[index] - 4)
+    })
+    const rowHeight = Math.max(7, ...wrapped.map((cell) => cell.length * (fontSize * 0.46) + 2.5))
     if (y + rowHeight > page.bottom) {
       doc.addPage()
-      drawHeader(doc, headers.join(' · '))
+      drawHeader(doc, options.headerTitle ?? headers.join(' · '))
       y = 38
-      doc.setFont('helvetica', 'normal')
-      doc.setFontSize(9)
+      drawTableHeader()
     }
     let cellX = page.margin
     wrapped.forEach((cell, index) => {
@@ -256,13 +273,40 @@ function drawParagraph(doc: jsPDF, text: string, y: number, accent = false) {
   doc.setTextColor(accent ? 185 : 23, accent ? 130 : 32, accent ? 47 : 51)
   const lines = doc.splitTextToSize(text, page.width - page.margin * 2)
   const lineHeight = accent ? 5.4 : 5
-  if (y + lines.length * lineHeight > page.bottom) {
+  if (y + lines.length * lineHeight > page.bottom - 4) {
     doc.addPage()
     drawHeader(doc, 'Interpretación')
     y = 36
   }
   doc.text(lines, page.margin, y, { lineHeightFactor: 1.36 })
   return y + lines.length * lineHeight + 5
+}
+
+function drawChapterTitle(doc: jsPDF, y: number, number: number, title: string, summary: string) {
+  doc.setDrawColor(235, 220, 190)
+  doc.setFillColor(252, 250, 246)
+  const titleLines = doc.splitTextToSize(title, page.width - page.margin * 2 - 20)
+  const summaryLines = doc.splitTextToSize(summary, page.width - page.margin * 2 - 12)
+  const blockHeight = 12 + titleLines.length * 5.8 + summaryLines.length * 4.7
+  if (y + blockHeight > page.bottom) {
+    doc.addPage()
+    drawHeader(doc, 'Interpretación')
+    y = 36
+  }
+  doc.roundedRect(page.margin, y - 5, page.width - page.margin * 2, blockHeight, 2, 2, 'FD')
+  doc.setFont('helvetica', 'bold')
+  doc.setFontSize(8)
+  doc.setTextColor(185, 130, 47)
+  doc.text(String(number).padStart(2, '0'), page.margin + 5, y + 1)
+  doc.setFont('times', 'normal')
+  doc.setFontSize(15)
+  doc.setTextColor(23, 32, 51)
+  doc.text(titleLines, page.margin + 18, y + 1, { lineHeightFactor: 1.1 })
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(9)
+  doc.setTextColor(72, 64, 52)
+  doc.text(summaryLines, page.margin + 5, y + 10 + titleLines.length * 5, { lineHeightFactor: 1.28 })
+  return y + blockHeight + 7
 }
 
 function drawCallout(doc: jsPDF, y: number, text: string) {
@@ -308,6 +352,16 @@ function getColumnWidths(count: number) {
   if (count === 3) return [42, contentWidth - 76, 34]
   if (count === 2) return [62, contentWidth - 62]
   return Array.from({ length: count }, () => contentWidth / count)
+}
+
+function fitSingleLine(doc: jsPDF, text: string, maxWidth: number, baseFontSize: number) {
+  let fontSize = baseFontSize
+  while (doc.getTextWidth(text) > maxWidth && fontSize > 6.6) {
+    fontSize -= 0.2
+    doc.setFontSize(fontSize)
+  }
+  doc.setFontSize(baseFontSize)
+  return text
 }
 
 function labelFor(chart: NatalChart, id: string) {

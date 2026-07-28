@@ -9,6 +9,7 @@
     "typecheck": "tsc -b",
     "lint": "oxlint",
     "test": "vitest run",
+    "test:e2e": "playwright test",
     "test:watch": "vitest",
     "preview": "vite preview",
     "audit": "npm audit --omit=dev"
@@ -27,6 +28,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.0",
     "@testing-library/jest-dom": "^7.0.0",
     "@testing-library/react": "^16.3.2",
     "@types/node": "^24.13.2",

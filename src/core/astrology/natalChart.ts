@@ -1,19 +1,29 @@
-import { CalculationFlag, HouseSystem as SweHouseSystem, Planet, SwissEphemeris } from '@swisseph/browser'
+import {
+  Asteroid,
+  CalculationFlag,
+  HouseSystem as SweHouseSystem,
+  LunarPoint,
+  Planet,
+  SwissEphemeris,
+} from '@swisseph/browser'
 import type { BirthInput, BirthTimeResolution, GeoResult, HouseSystem, NatalChart, PlanetPosition } from '../types'
 import { calculateAspects } from './aspects'
 import { longitudeToSign, normalizeLongitude } from './zodiac'
 
-const planetMap: Array<{ id: PlanetPosition['id']; label: string; planet: Planet }> = [
-  { id: 'sun', label: 'Sol', planet: Planet.Sun },
-  { id: 'moon', label: 'Luna', planet: Planet.Moon },
-  { id: 'mercury', label: 'Mercurio', planet: Planet.Mercury },
-  { id: 'venus', label: 'Venus', planet: Planet.Venus },
-  { id: 'mars', label: 'Marte', planet: Planet.Mars },
-  { id: 'jupiter', label: 'Júpiter', planet: Planet.Jupiter },
-  { id: 'saturn', label: 'Saturno', planet: Planet.Saturn },
-  { id: 'uranus', label: 'Urano', planet: Planet.Uranus },
-  { id: 'neptune', label: 'Neptuno', planet: Planet.Neptune },
-  { id: 'pluto', label: 'Plutón', planet: Planet.Pluto },
+const planetMap: Array<{ id: PlanetPosition['id']; label: string; body: Planet | LunarPoint | Asteroid; optional?: boolean }> = [
+  { id: 'sun', label: 'Sol', body: Planet.Sun },
+  { id: 'moon', label: 'Luna', body: Planet.Moon },
+  { id: 'mercury', label: 'Mercurio', body: Planet.Mercury },
+  { id: 'venus', label: 'Venus', body: Planet.Venus },
+  { id: 'mars', label: 'Marte', body: Planet.Mars },
+  { id: 'jupiter', label: 'Júpiter', body: Planet.Jupiter },
+  { id: 'saturn', label: 'Saturno', body: Planet.Saturn },
+  { id: 'uranus', label: 'Urano', body: Planet.Uranus },
+  { id: 'neptune', label: 'Neptuno', body: Planet.Neptune },
+  { id: 'pluto', label: 'Plutón', body: Planet.Pluto },
+  { id: 'north-node', label: 'Nodo Norte', body: LunarPoint.TrueNode },
+  { id: 'lilith', label: 'Lilith', body: LunarPoint.MeanApogee, optional: true },
+  { id: 'chiron', label: 'Quirón', body: Asteroid.Chiron, optional: true },
 ]
 
 const houseSystemMap: Record<HouseSystem, SweHouseSystem> = {
@@ -31,7 +41,9 @@ export async function calculateNatalChart(options: {
 }): Promise<NatalChart> {
   const swe = new SwissEphemeris()
   await swe.init()
-  await tryLoadSwissFiles(swe)
+  const ephemerisMode = await resolveEphemerisMode(swe)
+  const calculationFlag =
+    ephemerisMode === 'swiss-files' ? CalculationFlag.SwissEphemeris | CalculationFlag.Speed : CalculationFlag.MoshierEphemeris | CalculationFlag.Speed
 
   const jd = swe.dateToJulianDay(new Date(options.birthTime.utcIso))
   const housesResult = swe.calculateHouses(
@@ -41,16 +53,26 @@ export async function calculateNatalChart(options: {
     houseSystemMap[options.houseSystem],
   )
 
-  const positions = planetMap.map(({ id, label, planet }) => {
-    const calculated = swe.calculatePosition(jd, planet, CalculationFlag.SwissEphemeris)
-    return toPlanetPosition(id, label, calculated.longitude, calculated.latitude, calculated.longitudeSpeed)
+  const positions = planetMap.flatMap(({ id, label, body, optional }) => {
+    try {
+      const calculated = swe.calculatePosition(jd, body, calculationFlag)
+      return [toPlanetPosition(id, label, calculated.longitude, calculated.latitude, calculated.longitudeSpeed)]
+    } catch (error) {
+      if (optional) return []
+      throw new Error(`No se pudo calcular ${label} con el motor astronómico actual.`, { cause: error })
+    }
   })
+  const northNode = positions.find((position) => position.id === 'north-node')
+  const southNode = northNode ? toPlanetPosition('south-node', 'Nodo Sur', northNode.longitude + 180) : null
 
   const ascendant = toPlanetPosition('ascendant', 'Ascendente', housesResult.ascendant)
   const midheaven = toPlanetPosition('midheaven', 'Medio Cielo', housesResult.mc)
   const descendant = toPlanetPosition('descendant', 'Descendente', housesResult.ascendant + 180)
   const imumCoeli = toPlanetPosition('imum-coeli', 'Fondo del Cielo', housesResult.mc + 180)
-  const enrichedPositions = assignHouses([...positions, ascendant, descendant, midheaven, imumCoeli], housesResult.cusps)
+  const enrichedPositions = assignHouses(
+    [...positions, ...(southNode ? [southNode] : []), ascendant, descendant, midheaven, imumCoeli],
+    housesResult.cusps,
+  )
 
   const houses = Array.from({ length: 12 }, (_, index) => {
     const longitude = normalizeLongitude(housesResult.cusps[index + 1])
@@ -70,6 +92,7 @@ export async function calculateNatalChart(options: {
     location: options.location,
     birthTime: options.birthTime,
     houseSystem: options.houseSystem,
+    ephemerisMode,
     positions: enrichedPositions,
     houses,
     aspects: calculateAspects(enrichedPositions),
@@ -77,11 +100,12 @@ export async function calculateNatalChart(options: {
   }
 }
 
-async function tryLoadSwissFiles(swe: SwissEphemeris) {
+async function resolveEphemerisMode(swe: SwissEphemeris): Promise<NatalChart['ephemerisMode']> {
   try {
     await swe.loadStandardEphemeris()
+    return 'swiss-files'
   } catch {
-    // Fallback remains Swiss Ephemeris API with built-in Moshier data; UI and docs will flag precision mode.
+    return 'moshier-fallback'
   }
 }
 

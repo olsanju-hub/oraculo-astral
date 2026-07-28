@@ -12,6 +12,9 @@ const bodyMeaning: Record<string, string> = {
   uranus: 'originalidad, cambio, independencia y ruptura de patrones',
   neptune: 'imaginación, sensibilidad, ideales y zonas de confusión',
   pluto: 'intensidad, transformación, poder personal y procesos profundos',
+  'north-node': 'dirección evolutiva, aprendizaje vital y zona de crecimiento',
+  chiron: 'herida simbólica, sensibilidad y posibilidad de integración',
+  lilith: 'instinto, autonomía emocional y zonas de sombra no domesticadas',
   midheaven: 'vocación, dirección profesional y presencia pública',
 }
 

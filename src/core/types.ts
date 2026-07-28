@@ -126,6 +126,7 @@ export interface NatalChart {
   location: GeoResult
   birthTime: BirthTimeResolution
   houseSystem: HouseSystem
+  ephemerisMode: 'swiss-files' | 'moshier-fallback'
   positions: PlanetPosition[]
   houses: HouseCusp[]
   aspects: Aspect[]

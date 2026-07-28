@@ -5,6 +5,17 @@ export function ResultsPanel({ chart, interpretation }: { chart: NatalChart; int
     <div className="results-panel">
       <section className="technical-grid">
         <article>
+          <h3>Datos técnicos</h3>
+          <table>
+            <tbody>
+              <tr><th>Sistema de casas</th><td>{chart.houseSystem}</td><td /></tr>
+              <tr><th>Efemérides</th><td>{chart.ephemerisMode === 'swiss-files' ? 'Swiss Ephemeris' : 'Moshier fallback'}</td><td /></tr>
+              <tr><th>UTC</th><td>{chart.birthTime.utcIso}</td><td>{chart.birthTime.offset}</td></tr>
+              <tr><th>Zona IANA</th><td>{chart.birthTime.timezone}</td><td /></tr>
+            </tbody>
+          </table>
+        </article>
+        <article>
           <h3>Posiciones</h3>
           <table>
             <tbody>

@@ -85,7 +85,7 @@ function App() {
           animate={{ opacity: 1, scale: 1, rotate: 0 }}
           transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
         >
-          <img src="/brand/carta-astral.png" alt="" />
+          <img src={`${import.meta.env.BASE_URL}brand/carta-astral.png`} alt="" />
         </motion.div>
         <div className="hero-copy">
           <p className="eyebrow"><Sparkles size={16} /> Carta natal profesional</p>

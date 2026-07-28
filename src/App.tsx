@@ -7,6 +7,7 @@ import { CalculationProgress } from './components/CalculationProgress/Calculatio
 import { LocationSelector } from './components/LocationSelector/LocationSelector'
 import { ResultsPanel } from './components/ResultsPanel/ResultsPanel'
 import { ZodiacWheel } from './components/ZodiacWheel/ZodiacWheel'
+import { GuidedReading } from './components/GuidedReading/GuidedReading'
 import { calculateNatalChart } from './core/astrology/natalChart'
 import { searchLocations } from './core/geocoding/geocoder'
 import type { BirthInput, GeoResult, NatalChart } from './core/types'
@@ -191,6 +192,7 @@ function App() {
               <Download size={18} />
             </button>
           </div>
+          <GuidedReading interpretation={interpretation} />
           <ResultsPanel chart={chart} interpretation={interpretation} />
         </section>
       )}

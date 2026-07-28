@@ -432,6 +432,28 @@ dd {
   background: linear-gradient(145deg, #090d1a, #111827);
 }
 
+.zodiac-wheel-shell.classic .wheel-transform {
+  background: #fbfaf7;
+}
+
+.zodiac-wheel-shell.classic .wheel-outer,
+.zodiac-wheel-shell.classic .wheel-inner,
+.zodiac-wheel-shell.classic .wheel-core,
+.zodiac-wheel-shell.classic .wheel-divider,
+.zodiac-wheel-shell.classic .house-line {
+  stroke: #9f7a35;
+}
+
+.zodiac-wheel-shell.classic .zodiac-symbol,
+.zodiac-wheel-shell.classic .planet-node text {
+  fill: #172033;
+}
+
+.zodiac-wheel-shell.classic .planet-node circle {
+  fill: #fffaf0;
+  stroke: #9f7a35;
+}
+
 .zodiac-wheel {
   width: min(100%, 620px);
   height: auto;
@@ -493,6 +515,16 @@ dd {
   font-size: 12px;
   text-anchor: middle;
   font-weight: 700;
+}
+
+.planet-node .planet-label {
+  font-size: 7px;
+  font-weight: 500;
+  fill: rgba(255, 255, 255, 0.72);
+}
+
+.zodiac-wheel-shell.classic .planet-node .planet-label {
+  fill: #667085;
 }
 
 .calculation-progress {
@@ -557,7 +589,8 @@ dd {
 }
 
 .technical-grid article,
-.interpretation {
+.interpretation,
+.guided-reading {
   background: rgba(255, 255, 255, 0.78);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -596,6 +629,18 @@ td {
 .aspect-list span,
 .aspect-list code {
   color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.guided-reading {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.guide-step {
+  color: var(--gold-strong);
+  font-weight: 700;
   font-size: 0.82rem;
 }
 

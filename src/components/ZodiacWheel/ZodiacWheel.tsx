@@ -1,18 +1,25 @@
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
 import type { NatalChart } from '../../core/types'
 import { zodiacSigns } from '../../core/astrology/zodiac'
+import { useState } from 'react'
 
 const radius = 220
 const center = 260
 
 export function ZodiacWheel({ chart }: { chart: NatalChart }) {
+  const [mode, setMode] = useState<'modern' | 'classic'>('modern')
+  const [showAspects, setShowAspects] = useState(true)
+  const [showHouses, setShowHouses] = useState(true)
+  const [showLabels, setShowLabels] = useState(true)
+
   return (
-    <div className="zodiac-wheel-shell">
+    <div className={`zodiac-wheel-shell ${mode}`}>
       <div className="wheel-toolbar" aria-label="Modos de visualización">
-        <button className="chip active">Moderna</button>
-        <button className="chip">Clásica</button>
-        <button className="chip">Aspectos</button>
-        <button className="chip">Casas</button>
+        <button className={`chip ${mode === 'modern' ? 'active' : ''}`} onClick={() => setMode('modern')}>Moderna</button>
+        <button className={`chip ${mode === 'classic' ? 'active' : ''}`} onClick={() => setMode('classic')}>Clásica</button>
+        <button className={`chip ${showAspects ? 'active' : ''}`} onClick={() => setShowAspects((value) => !value)}>Aspectos</button>
+        <button className={`chip ${showHouses ? 'active' : ''}`} onClick={() => setShowHouses((value) => !value)}>Casas</button>
+        <button className={`chip ${showLabels ? 'active' : ''}`} onClick={() => setShowLabels((value) => !value)}>Etiquetas</button>
       </div>
       <TransformWrapper minScale={0.8} maxScale={2.6} wheel={{ step: 0.08 }} centerOnInit>
         <TransformComponent wrapperClass="wheel-transform">
@@ -44,7 +51,7 @@ export function ZodiacWheel({ chart }: { chart: NatalChart }) {
               )
             })}
 
-            {chart.houses.map((house) => {
+            {showHouses && chart.houses.map((house) => {
               const angle = (house.longitude - 90) * (Math.PI / 180)
               return (
                 <line
@@ -58,7 +65,7 @@ export function ZodiacWheel({ chart }: { chart: NatalChart }) {
               )
             })}
 
-            {chart.aspects.slice(0, 34).map((aspect) => {
+            {showAspects && chart.aspects.slice(0, 34).map((aspect) => {
               const from = chart.positions.find((position) => position.id === aspect.from)
               const to = chart.positions.find((position) => position.id === aspect.to)
               if (!from || !to) return null
@@ -84,6 +91,7 @@ export function ZodiacWheel({ chart }: { chart: NatalChart }) {
                 <g key={position.id} className={`planet-node ${position.id}`}>
                   <circle cx={x} cy={y} r="14" />
                   <text x={x} y={y + 4}>{planetGlyph(position.id)}</text>
+                  {showLabels && <text x={x} y={y + 25} className="planet-label">{position.formatted.split(' ')[1]}</text>}
                 </g>
               )
             })}

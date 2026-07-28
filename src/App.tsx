@@ -8,7 +8,7 @@ import { LocationSelector } from './components/LocationSelector/LocationSelector
 import { ResultsPanel } from './components/ResultsPanel/ResultsPanel'
 import { ZodiacWheel } from './components/ZodiacWheel/ZodiacWheel'
 import { calculateNatalChart } from './core/astrology/natalChart'
-import { openMeteoGeocoder } from './core/geocoding/providers/openMeteo'
+import { searchLocations } from './core/geocoding/geocoder'
 import type { BirthInput, GeoResult, NatalChart } from './core/types'
 import { buildInterpretation } from './core/interpretation/interpretationEngine'
 import { resolveBirthTime } from './core/timezone/timezoneService'
@@ -39,7 +39,7 @@ function App() {
   async function handleBirthSubmit(input: BirthInput) {
     setBirthInput(input)
     setStep('location')
-    const results = await openMeteoGeocoder.search({
+    const results = await searchLocations({
       city: input.city,
       country: input.country,
       language: 'es',

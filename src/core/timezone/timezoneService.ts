@@ -12,11 +12,18 @@ export function resolveBirthTime(input: BirthInput, location: GeoResult): BirthT
   const plain = Temporal.PlainDateTime.from(localDateTime)
   const earlier = plain.toZonedDateTime(timezone, { disambiguation: 'earlier' })
   const later = plain.toZonedDateTime(timezone, { disambiguation: 'later' })
-  const rejectResult = tryRejectDisambiguation(plain, timezone)
+  const validWithReject = isValidWithReject(plain, timezone)
+  const requestedPlain = plain.toString()
+  const earlierPlain = earlier.toPlainDateTime().toString()
+  const laterPlain = later.toPlainDateTime().toString()
 
   const alternatives = Array.from(new Set([earlier.toInstant().toString(), later.toInstant().toString()]))
   const ambiguity: BirthTimeResolution['ambiguity'] =
-    rejectResult === 'nonexistent' ? 'nonexistent' : alternatives.length > 1 ? 'ambiguous' : 'none'
+    earlierPlain !== requestedPlain || laterPlain !== requestedPlain
+      ? 'nonexistent'
+      : !validWithReject && alternatives.length > 1
+        ? 'ambiguous'
+        : 'none'
 
   return {
     timezone,
@@ -28,11 +35,11 @@ export function resolveBirthTime(input: BirthInput, location: GeoResult): BirthT
   }
 }
 
-function tryRejectDisambiguation(plain: Temporal.PlainDateTime, timezone: string) {
+function isValidWithReject(plain: Temporal.PlainDateTime, timezone: string) {
   try {
     plain.toZonedDateTime(timezone, { disambiguation: 'reject' })
-    return 'valid'
+    return true
   } catch {
-    return 'nonexistent'
+    return false
   }
 }

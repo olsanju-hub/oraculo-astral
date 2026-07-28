@@ -69,4 +69,10 @@ test('calculates a chart with explicit location selection', async ({ page }) => 
   await expect(page.getByRole('heading', { name: 'Lectura integrada' })).toBeVisible({ timeout: 20_000 })
   await expect(page.getByRole('rowheader', { name: 'Sol' })).toBeVisible()
   await expect(page.getByText('Sistema de casas')).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Cómo leer este informe' }).first()).toBeVisible()
+
+  const downloadPromise = page.waitForEvent('download')
+  await page.getByRole('button', { name: 'Exportar PDF' }).click()
+  const download = await downloadPromise
+  expect(download.suggestedFilename()).toContain('Carta_Natal_Alba')
 })

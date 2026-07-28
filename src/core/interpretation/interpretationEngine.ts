@@ -49,6 +49,7 @@ export function buildInterpretation(chart: NatalChart): InterpretationReport {
     title: `Lectura natal de ${chart.input.name}`,
     overview: buildOverview(ctx),
     sections: [
+      readingGuideSection(ctx),
       identitySection(ctx),
       emotionalSection(ctx),
       mindSection(ctx),
@@ -60,6 +61,27 @@ export function buildInterpretation(chart: NatalChart): InterpretationReport {
       contradictionsSection(ctx),
       growthSection(ctx),
       synthesisSection(ctx),
+    ],
+  }
+}
+
+function readingGuideSection(ctx: InterpretationContext): InterpretationSection {
+  const strongestAspect = strongest(ctx.chart.aspects)
+  return {
+    id: 'reading-guide',
+    title: 'Cómo leer este informe',
+    summary: 'La carta natal es un mapa simbólico: muestra relaciones entre funciones internas, no etiquetas fijas sobre una persona.',
+    linkedAspects: strongestAspect ? [strongestAspect.id] : [],
+    body: [
+      `Antes de entrar en la interpretación conviene aclarar el lenguaje. El Sol describe identidad y dirección vital; la Luna habla de seguridad emocional; el Ascendente es la forma espontánea de entrar en contacto con el mundo, como la puerta principal de una casa. El Medio Cielo señala la zona más visible de la carta: vocación, reputación y manera de ocupar un lugar público.`,
+      `Las Casas son doce áreas de experiencia. Por ejemplo, la Casa 4 se relaciona con raíces e intimidad, la Casa 7 con vínculos importantes y la Casa 10 con profesión o exposición pública. Cuando un planeta cae en una casa, esa función de la personalidad tiende a expresarse con fuerza en los temas de esa área.`,
+      `Los signos describen estilos. No son “tipos de persona”, sino maneras de actuar: Aries inicia, Tauro estabiliza, Géminis conecta ideas, Cáncer protege, Leo expresa, Virgo analiza, Libra vincula, Escorpio profundiza, Sagitario amplía, Capricornio estructura, Acuario toma distancia y Piscis imagina o empatiza.`,
+      `Los elementos resumen el temperamento general: Fuego impulsa, Tierra concreta, Aire piensa y comunica, Agua siente y vincula. Las modalidades describen el modo de movimiento: Cardinal inicia, Fijo sostiene y Mutable adapta. En esta carta domina ${ctx.primaryElement.toLowerCase()} con modalidad ${ctx.primaryModality.toLowerCase()}, por eso muchas interpretaciones se leerán a través de ${elementTone[ctx.primaryElement]} y de la tendencia a ${modalityTone[ctx.primaryModality]}.`,
+      `Un aspecto es una relación angular entre dos planetas o puntos. Dicho de forma sencilla: muestra cómo conversan dos partes de la carta. Un trígono suele facilitar cooperación; una cuadratura crea fricción que obliga a crecer; una oposición pide equilibrio entre dos polos; una conjunción mezcla dos energías; un sextil abre oportunidades si se usan conscientemente. Aspectos menores como quincuncio o semisextil son ajustes finos: no dominan toda la carta, pero pueden señalar incomodidades o aprendizajes de adaptación.`,
+      `El Nodo Norte no es un planeta físico: es un punto matemático asociado con dirección de crecimiento. El Nodo Sur marca una zona conocida o automática. Quirón, cuando aparece calculado con fiabilidad, se lee como una sensibilidad que puede volverse sabiduría práctica. Lilith o Luna Negra es otro punto matemático asociado con instinto, autonomía y partes menos domesticadas de la personalidad. Estos puntos se interpretan con cautela y siempre dentro del conjunto de la carta.`,
+      strongestAspect
+        ? `En esta lectura se presta atención especial a ${aspectPhrase(ctx, strongestAspect)} porque los aspectos con orbe pequeño suelen sentirse con más nitidez. El orbe es la distancia respecto al aspecto exacto: cuanto menor es, más cerrado está el contacto.`
+        : `Cuando no hay un aspecto claramente dominante, la lectura se apoya más en la repetición de patrones: elementos, casas activadas, modalidad dominante y vínculos entre planetas personales.`,
     ],
   }
 }
